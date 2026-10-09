@@ -172,7 +172,6 @@ Open the app, pick **API Token** or **Global Key**, paste your credentials and t
 |---|---|
 | **Credentials** | Stored on your device with hardware-backed encryption. Sent only to `api.cloudflare.com`. |
 | **AI features** | Send the zone configuration needed to answer to a hosted backend. Your API token is never sent to it. That backend is not part of this repository. |
-| **Ads** | The free version shows ads. A one-time purchase removes them. |
 | **Policy** | [Privacy policy](https://imtaqin.id/page/-privacy-policy-cloudflare-mobile) |
 
 | Auth method | Header | Scope |
@@ -233,7 +232,7 @@ store/               Play Store screenshots, icon and listing sources
 
 ### Tech stack
 
-React Native 0.81 · Expo SDK 54 · Expo Router · TypeScript · Axios · i18next · react-native-svg · Expo Secure Store · react-native-iap · Google Mobile Ads
+React Native 0.81 · Expo SDK 54 · Expo Router · TypeScript · Axios · i18next · react-native-svg · Expo Secure Store · react-native-iap
 
 ## Known limitations
 

@@ -16,8 +16,6 @@ import { ChipRow, Group, IconCircle, ListRow, ToggleRow, ValueRow } from '@/comp
 import { Sheet } from '@/components/ui/sheet';
 import { Spacing, FontSize, Radius } from '@/constants/theme';
 import * as appLock from '@/services/app-lock';
-import * as premiumService from '@/services/premium';
-import { usePremium } from '@/services/premium';
 import { DiceBearAvatar } from '@/components/ui/dicebear-avatar';
 import { openReview } from '@/services/review-prompt';
 import { startPlayUpdate } from '@/services/play-update';
@@ -69,9 +67,6 @@ export default function SettingsScreen() {
   const [showSensitive, setShowSensitive] = useState(false);
   const [lockAvailable, setLockAvailable] = useState(false);
   const [lockEnabled, setLockEnabledState] = useState(false);
-  const premium = usePremium();
-  const [premiumPrice, setPremiumPrice] = useState<string | null>(null);
-  const [premiumBusy, setPremiumBusy] = useState(false);
   const { quota: aiQuota } = useAiQuota();
   const [showAiPaywall, setShowAiPaywall] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(true);
@@ -91,43 +86,6 @@ export default function SettingsScreen() {
       setLockEnabledState(await appLock.isLockEnabled());
     })();
   }, []);
-
-  useEffect(() => {
-    if (!premium) {
-      premiumService.getPremiumPrice().then(setPremiumPrice).catch(() => {});
-    }
-  }, [premium]);
-
-  const handleBuyPremium = async () => {
-    setPremiumBusy(true);
-    try {
-      await premiumService.purchasePremium();
-    } catch (e: any) {
-      const msg = String(e?.message ?? '');
-      if (msg === 'billing-unavailable') {
-        Alert.alert(t('premium.unavailable_title'), t('premium.unavailable_body'));
-      } else if (!msg.toLowerCase().includes('cancel')) {
-        Alert.alert(t('common.error'), msg || t('premium.purchase_error'));
-      }
-    } finally {
-      setPremiumBusy(false);
-    }
-  };
-
-  const handleRestorePremium = async () => {
-    setPremiumBusy(true);
-    try {
-      const owned = await premiumService.restorePremium();
-      Alert.alert(
-        t('common.info'),
-        owned ? t('premium.restored') : t('premium.nothing_to_restore')
-      );
-    } catch (e: any) {
-      Alert.alert(t('common.error'), e?.message ?? t('premium.purchase_error'));
-    } finally {
-      setPremiumBusy(false);
-    }
-  };
 
   const toggleLock = async (value: boolean) => {
     if (value) {
@@ -198,37 +156,6 @@ export default function SettingsScreen() {
           variant="default"
         />
       </Card>
-
-      {/* Premium */}
-      {premium ? (
-        <Group style={styles.planCard}>
-          <ListRow icon="check-circle" iconTone="success" title={t('premium.active_title')} />
-        </Group>
-      ) : (
-        <Card style={[styles.planCard, styles.plan]}>
-          <View style={styles.planTop}>
-            <IconCircle name="zap" />
-            <Text style={[styles.planTitle, { color: colors.text }]}>{t('premium.upsell_compact')}</Text>
-          </View>
-          <View style={styles.planActions}>
-            <TouchableOpacity
-              onPress={handleRestorePremium}
-              disabled={premiumBusy}
-              hitSlop={8}
-              style={styles.planLinkWrap}
-              accessibilityRole="button"
-            >
-              <Text style={[styles.planLink, { color: colors.textSecondary }]}>{t('premium.restore')}</Text>
-            </TouchableOpacity>
-            <Button
-              title={premiumPrice ?? t('premium.buy')}
-              onPress={handleBuyPremium}
-              disabled={premiumBusy}
-              size="sm"
-            />
-          </View>
-        </Card>
-      )}
 
       {/* CF Mobile AI plan */}
       {aiPro ? (
