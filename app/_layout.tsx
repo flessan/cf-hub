@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import { AuthProvider } from '@/contexts/auth';
 import { ThemeProvider, useThemeContext } from '@/contexts/theme';
 import { LockGate } from '@/components/ui/lock-gate';
-import { initBilling } from '@/services/billing';
+import { initPremium } from '@/services/premium';
 import { refreshQuota } from '@/services/ai-subscription';
 import { syncMonitoring } from '@/services/monitor-task';
 import { track } from '@/services/analytics';
@@ -130,7 +130,7 @@ export default function RootLayout() {
   useEffect(() => {
     installGlobalErrorLog();
     loadLanguage().catch(() => {});
-    initBilling();
+    initPremium();
     // Also loads the quota store, which subscribes to AI usage events.
     refreshQuota().catch(() => {});
     checkPlayUpdate();

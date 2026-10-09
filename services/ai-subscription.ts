@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Platform } from 'react-native';
 import Constants from 'expo-constants';
 import { getQuota, onUsageChanged, AiQuota } from './ai';
-import { isBillingAvailable } from './billing';
+import { isBillingAvailable } from './premium';
 
 export const AI_SUB_SKU = 'cfmobile_ai_monthly';
 
