@@ -134,9 +134,11 @@ export default function GitHubScreen() {
         setRepositories(repos);
       } else if (result.status === 'pending' || result.status === 'slow_down') {
         setMessage(label('GitHub approval is still pending. Finish approval in the browser and check again.', 'Persetujuan GitHub masih menunggu. Selesaikan di browser lalu periksa lagi.'));
-      } else {
+      } else if ('message' in result) {
         setError(result.message);
         if (result.status === 'expired' || result.status === 'denied') setDeviceAuthorization(null);
+      } else {
+        setMessage(label('GitHub approval is still pending. Finish approval in the browser and check again.', 'Persetujuan GitHub masih menunggu. Selesaikan di browser lalu periksa lagi.'));
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : label('Authorization check failed.', 'Pemeriksaan otorisasi gagal.'));
