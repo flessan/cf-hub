@@ -25,7 +25,7 @@ Create a local `.env` file (do not commit a real secret file) or set the variabl
 EXPO_PUBLIC_GITHUB_CLIENT_ID=Iv1.example-client-id
 ```
 
-The Client ID is public app configuration, not a secret. Restart Expo after changing environment variables and rebuild the native app for production. The repository includes `.env.example` as a template.
+The Client ID is public app configuration, not a secret. For GitHub Actions builds, add a repository **Actions variable** named `EXPO_PUBLIC_GITHUB_CLIENT_ID` under Settings → Secrets and variables → Actions → Variables. The build and release workflows read that variable automatically. Locally, copy `.env.example` to `.env`, fill in the Client ID, restart Expo and rebuild the native app.
 
 If no Client ID is configured, you can still test the native API screens by pasting your own GitHub token in the GitHub tab. CF-Hub validates it against `GET /user` before saving it in secure device storage. Use a fine-grained token limited to the repositories and read-only permissions you need. Never paste a client secret or GitHub App private key into the app.
 
