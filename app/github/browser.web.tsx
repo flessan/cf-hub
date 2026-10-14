@@ -11,7 +11,7 @@ function resolveAddress(value: string): string | null {
   const input = value.trim();
   if (!input) return null;
   let candidate = input;
-  if (!/^https?:\\/\\//i.test(candidate)) {
+  if (!candidate.startsWith('http://') && !candidate.startsWith('https://')) {
     candidate = candidate.includes('.') && !candidate.includes(' ')
       ? `https://${candidate}`
       : `https://github.com/search?q=${encodeURIComponent(candidate)}`;

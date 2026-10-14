@@ -87,7 +87,7 @@ export function Icon({ name, size = 24, color, strokeWidth = 2 }: IconProps) {
 
     case 'git-pull-request':
       return <LucideIcon size={size} color={c} sw={sw} paths={[
-        'M6 3v12', 'M18 15V9a3 3 0 0 0-3-3h-3', 'M12 6l-3-3 3-3',
+        'M6 3v12', 'M18 15V9a3 3 0 0 0-3-3h-3', 'M12 6l-3-3',
       ]} circles={[{ cx: 6, cy: 3, r: 2 }, { cx: 6, cy: 18, r: 2 }, { cx: 18, cy: 18, r: 2 }]} />;
 
     // ─── Brand (filled) ───────────────────────────────────

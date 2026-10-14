@@ -44,4 +44,4 @@ If no Client ID is configured, you can still test the native API screens by past
 - Confirm the app's selected repository permissions are still read-only.
 - Test authorization approval, denial, device-code expiry, revoked/expired access, API rate limits, private repositories and sign-out.
 - Review [GitHub's terms](https://docs.github.com/en/site-policy/github-terms/github-terms-of-service) and your app privacy policy before a public release.
-- A future Cloudflare Pages/repository linking feature should match the authenticated user's repository and Pages-project access and must not require GitHub write permission just to display links.
+- The current GitHub-to-Cloudflare Pages link is a device-local shortcut: it stores a Pages project name and opens the existing CF-Hub Pages screen. It does not verify that the repository is connected to that project or change either service's deployment settings.
