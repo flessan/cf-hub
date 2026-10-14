@@ -30,7 +30,8 @@
     "zones": "ゾーン",
     "services": "サービス",
     "settings": "設定",
-    "ai_chat": "AI Chat"
+    "ai_chat": "AI Chat",
+    "github": "GitHub"
   },
   "auth": {
     "tagline": "どこからでもCloudflareを管理",

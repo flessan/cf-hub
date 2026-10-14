@@ -91,6 +91,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="github"
+        options={{
+          title: t('tabs.github'),
+          tabBarIcon: ({ color, size }) => <Icon name="github" size={size} color={color} />,
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           title: t('tabs.settings'),

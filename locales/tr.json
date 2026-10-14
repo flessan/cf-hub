@@ -30,7 +30,8 @@
     "zones": "Bölgeler",
     "services": "Hizmetler",
     "settings": "Ayarlar",
-    "ai_chat": "AI Chat"
+    "ai_chat": "AI Chat",
+    "github": "GitHub"
   },
   "auth": {
     "tagline": "Cloudflare'ınızı her yerden yönetin",

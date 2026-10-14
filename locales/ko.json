@@ -30,7 +30,8 @@
     "zones": "존",
     "services": "서비스",
     "settings": "설정",
-    "ai_chat": "AI Chat"
+    "ai_chat": "AI Chat",
+    "github": "GitHub"
   },
   "auth": {
     "tagline": "어디서든 Cloudflare를 관리하세요",

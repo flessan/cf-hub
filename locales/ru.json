@@ -30,7 +30,8 @@
     "zones": "Зоны",
     "services": "Сервисы",
     "settings": "Настройки",
-    "ai_chat": "AI Chat"
+    "ai_chat": "AI Chat",
+    "github": "GitHub"
   },
   "auth": {
     "tagline": "Управляйте Cloudflare отовсюду",

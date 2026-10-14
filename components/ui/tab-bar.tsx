@@ -18,6 +18,8 @@ const AI_PURPLE = '#8B5CF6';
 export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const { colors, isDark } = useTheme();
   const insets = useSafeAreaInsets();
+  const compact = state.routes.length > 5;
+  const featuredSize = compact ? 48 : FEATURED_SIZE;
 
   return (
     <View style={[styles.wrap, { backgroundColor: colors.background, paddingBottom: Math.max(insets.bottom, 12) }]}>
@@ -58,6 +60,9 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
                 style={({ pressed }) => [
                   styles.featured,
                   {
+                    width: featuredSize,
+                    height: featuredSize,
+                    borderRadius: featuredSize / 2,
                     // Ring in the bar's own colour so the circle reads as cut into the pill.
                     borderColor: focused ? AI_PURPLE + '55' : colors.surface,
                     shadowColor: AI_PURPLE,
@@ -65,7 +70,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
                   },
                 ]}
               >
-                <Svg width={FEATURED_SIZE - 6} height={FEATURED_SIZE - 6} style={StyleSheet.absoluteFill}>
+                <Svg width={featuredSize - 6} height={featuredSize - 6} style={StyleSheet.absoluteFill}>
                   <Defs>
                     <LinearGradient id="aiTab" x1="0" y1="0" x2="1" y2="1">
                       <Stop offset="0" stopColor={CF.orange} />
@@ -73,9 +78,9 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
                     </LinearGradient>
                   </Defs>
                   <Circle
-                    cx={(FEATURED_SIZE - 6) / 2}
-                    cy={(FEATURED_SIZE - 6) / 2}
-                    r={(FEATURED_SIZE - 6) / 2}
+                    cx={(featuredSize - 6) / 2}
+                    cy={(featuredSize - 6) / 2}
+                    r={(featuredSize - 6) / 2}
                     fill="url(#aiTab)"
                   />
                 </Svg>
@@ -88,7 +93,7 @@ export function FloatingTabBar({ state, descriptors, navigation }: BottomTabBarP
             <Pressable
               key={route.key}
               {...common}
-              style={[styles.item, focused && { backgroundColor: colors.primary }]}
+              style={[styles.item, compact && { width: 42 }, focused && { backgroundColor: colors.primary }]}
             >
               {options.tabBarIcon?.({
                 focused,
