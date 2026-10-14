@@ -258,7 +258,7 @@ export async function startGitHubDeviceAuthorization(clientId = GITHUB_CLIENT_ID
   }
   const response = await fetch(GITHUB_DEVICE_CODE_URL, {
     method: 'POST',
-    headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+    headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams({ client_id: clientId }).toString(),
   });
   const payload = await response.json() as DeviceAuthorization & { error?: string; error_description?: string };

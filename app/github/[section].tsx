@@ -40,20 +40,25 @@ export default function GitHubSectionScreen() {
     try {
       const credential = await getGitHubCredential();
       setConnected(!!credential);
-      if (!credential && key !== 'repositories') {
+      if (!credential) {
+        setRepos([]);
         setIssues([]);
         setPulls([]);
-        setError(isId() ? 'Hubungkan akun GitHub untuk melihat issues dan pull requests milikmu.' : 'Connect GitHub to view issues and pull requests involving your account.');
+        setError(
+          key === 'repositories'
+            ? (isId() ? 'Hubungkan GitHub untuk menampilkan repositorimu. Pencarian repositori publik tersedia di tab GitHub.' : 'Connect GitHub to list your repositories. Public repository search is available on the GitHub tab.')
+            : (isId() ? 'Hubungkan akun GitHub untuk melihat issues dan pull requests milikmu.' : 'Connect GitHub to view issues and pull requests involving your account.'),
+        );
         return;
       }
       if (key === 'repositories') {
-        setRepos(await listMyRepositories(credential?.accessToken ?? null));
+        setRepos(await listMyRepositories(credential.accessToken));
       } else if (key === 'issues') {
         const viewer = await getGitHubViewer(credential?.accessToken ?? null);
-        setIssues(await listMyIssues(viewer.login, credential?.accessToken ?? null));
+        setIssues(await listMyIssues(viewer.login, credential.accessToken));
       } else if (key === 'pulls') {
         const viewer = await getGitHubViewer(credential?.accessToken ?? null);
-        setPulls(await listMyPullRequests(viewer.login, credential?.accessToken ?? null));
+        setPulls(await listMyPullRequests(viewer.login, credential.accessToken));
       } else {
         setError('Unknown GitHub section.');
       }
