@@ -30,7 +30,8 @@
     "zones": "Vùng",
     "services": "Dịch vụ",
     "settings": "Cài đặt",
-    "ai_chat": "AI Chat"
+    "ai_chat": "AI Chat",
+    "github": "GitHub"
   },
   "auth": {
     "tagline": "Quản lý Cloudflare của bạn từ mọi nơi",

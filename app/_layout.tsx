@@ -65,6 +65,9 @@ function AppContent() {
           <Stack.Screen name="onboarding" options={{ animation: 'fade' }} />
           <Stack.Screen name="login" options={{ animation: 'fade' }} />
           <Stack.Screen name="oauth/callback" options={{ animation: 'fade' }} />
+          <Stack.Screen name="github/[section]" options={{ animation: 'slide_from_right', headerShown: true }} />
+          <Stack.Screen name="github/repository/[owner]/[repo]" options={{ animation: 'slide_from_right', headerShown: true }} />
+          <Stack.Screen name="github/browser" options={{ animation: 'slide_from_right', headerShown: true }} />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen
             name="zone/[id]"

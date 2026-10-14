@@ -109,7 +109,7 @@ DNS, firewall, analytics, Workers and an AI assistant in one clean Android app.
 </tr>
 </table>
 
-Also in the app: Email Routing, cache purge, page rules, account audit logs, and screens for many more Cloudflare products. [`docs/ROADMAP.md`](docs/ROADMAP.md) tracks what is finished and what is still read-only.
+Also in the app: a native GitHub workspace for repositories, issues, pull requests and commits, plus a browser fallback. See [GitHub integration setup](docs/GITHUB_INTEGRATION.md). Email Routing, cache purge, page rules, account audit logs, and many more Cloudflare products are available too. [`docs/ROADMAP.md`](docs/ROADMAP.md) tracks what is finished and what is still read-only.
 
 ## Getting started
 

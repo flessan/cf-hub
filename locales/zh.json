@@ -30,7 +30,8 @@
     "zones": "区域",
     "services": "服务",
     "settings": "设置",
-    "ai_chat": "AI Chat"
+    "ai_chat": "AI Chat",
+    "github": "GitHub"
   },
   "auth": {
     "tagline": "随时随地管理您的Cloudflare",

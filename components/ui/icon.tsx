@@ -6,7 +6,7 @@ export type IconName =
   // Brand
   | 'cloudflare' | 'cf-workers' | 'cf-pages'
   // Navigation / Tabs
-  | 'dashboard' | 'globe' | 'widgets' | 'settings'
+  | 'github' | 'dashboard' | 'globe' | 'widgets' | 'settings'
   // Zone management
   | 'dns' | 'lock' | 'shield' | 'layers' | 'chart-line' | 'route' | 'zap' | 'rule'
   // Actions
@@ -18,7 +18,7 @@ export type IconName =
   // Objects
   | 'cloud' | 'cloud-off' | 'cloud-upload' | 'key' | 'link' | 'code'
   | 'database' | 'server' | 'monitor' | 'mail' | 'user' | 'users'
-  | 'languages' | 'activity' | 'network' | 'lock-open' | 'lock-outline'
+  | 'languages' | 'activity' | 'git-pull-request' | 'network' | 'lock-open' | 'lock-outline'
   | 'enhanced-encryption'
   // Theme
   | 'sun' | 'moon' | 'smartphone'
@@ -80,6 +80,16 @@ export function Icon({ name, size = 24, color, strokeWidth = 2 }: IconProps) {
   const sw = strokeWidth;
 
   switch (name) {
+    case 'github':
+      return <FilledIcon size={size} color={c} paths={[
+        'M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.75-.24.75-.53v-2.04c-3.1.68-3.75-1.32-3.75-1.32-.5-1.27-1.23-1.61-1.23-1.61-1.01-.69.08-.68.08-.68 1.12.08 1.7 1.14 1.7 1.14.99 1.7 2.6 1.21 3.23.92.1-.72.39-1.21.71-1.49-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.06 1.14a10.6 10.6 0 0 1 5.56 0c2.12-1.44 3.06-1.14 3.06-1.14.61 1.54.23 2.68.11 2.96.72.78 1.15 1.77 1.15 2.99 0 4.29-2.61 5.24-5.1 5.51.4.34.76 1.02.76 2.07V22c0 .29.2.63.76.53A11.1 11.1 0 0 0 12 .9Z',
+      ]} />;
+
+    case 'git-pull-request':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M6 3v12', 'M18 15V9a3 3 0 0 0-3-3h-3', 'M12 6l-3-3 3-3',
+      ]} circles={[{ cx: 6, cy: 3, r: 2 }, { cx: 6, cy: 18, r: 2 }, { cx: 18, cy: 18, r: 2 }]} />;
+
     // ─── Brand (filled) ───────────────────────────────────
     case 'cloudflare':
       return <FilledIcon size={size} color={c} paths={[

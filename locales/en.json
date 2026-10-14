@@ -30,7 +30,8 @@
     "zones": "Zones",
     "services": "Services",
     "settings": "Settings",
-    "ai_chat": "AI Chat"
+    "ai_chat": "AI Chat",
+    "github": "GitHub"
   },
   "auth": {
     "tagline": "Manage your Cloudflare from anywhere",

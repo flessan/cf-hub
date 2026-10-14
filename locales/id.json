@@ -30,7 +30,8 @@
     "zones": "Zona",
     "services": "Layanan",
     "settings": "Pengaturan",
-    "ai_chat": "AI Chat"
+    "ai_chat": "AI Chat",
+    "github": "GitHub"
   },
   "auth": {
     "tagline": "Kelola Cloudflare Anda dari mana saja",
