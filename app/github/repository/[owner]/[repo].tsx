@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Image, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, RefreshControl, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { Icon } from '@/components/ui/icon';
 import { Card } from '@/components/ui/card';
@@ -12,6 +12,7 @@ import {
   getGitHubCredential, getRepository, listRepositoryCommits, listRepositoryIssues,
   listRepositoryPullRequests, GitHubCommit, GitHubIssue, GitHubPullRequest, GitHubRepository,
 } from '@/services/github';
+import { getGitHubPagesLink, setGitHubPagesLink } from '@/services/github-links';
 
 type DetailTab = 'overview' | 'issues' | 'pulls' | 'commits';
 const tabs: { key: DetailTab; label: string; icon: 'code' | 'rule' | 'git-pull-request' | 'activity' }[] = [
@@ -33,6 +34,9 @@ export default function GitHubRepositoryScreen() {
   const [commits, setCommits] = useState<GitHubCommit[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [linkedProject, setLinkedProject] = useState('');
+  const [projectDraft, setProjectDraft] = useState('');
+  const [linkMessage, setLinkMessage] = useState('');
 
   const load = useCallback(async () => {
     if (!ownerName || !repoName) return;
@@ -59,6 +63,25 @@ export default function GitHubRepositoryScreen() {
   }, [ownerName, repoName]);
 
   useEffect(() => { void load(); }, [load]);
+  useEffect(() => {
+    getGitHubPagesLink(`${ownerName}/${repoName}`).then((value) => {
+      setLinkedProject(value ?? '');
+      setProjectDraft(value ?? '');
+    }).catch(() => {});
+  }, [ownerName, repoName]);
+  const savePagesLink = async () => {
+    const value = projectDraft.trim();
+    if (!value) return;
+    await setGitHubPagesLink(`${ownerName}/${repoName}`, value);
+    setLinkedProject(value);
+    setLinkMessage('Cloudflare Pages shortcut saved on this device.');
+  };
+  const removePagesLink = async () => {
+    await setGitHubPagesLink(`${ownerName}/${repoName}`, null);
+    setLinkedProject('');
+    setProjectDraft('');
+    setLinkMessage('Cloudflare Pages shortcut removed.');
+  };
   const openBrowser = (url: string) => router.push({ pathname: '/github/browser', params: { url } } as any);
 
   return (
@@ -105,6 +128,18 @@ export default function GitHubRepositoryScreen() {
               <InfoLine label="Updated" value={new Date(repository.updated_at).toLocaleDateString()} />
               <InfoLine label="Last push" value={new Date(repository.pushed_at).toLocaleDateString()} />
               <InfoLine label="Visibility" value={repository.private ? 'Private' : 'Public'} />
+            </Card>
+            <Card style={{ gap: Spacing.md }}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Cloudflare Pages link</Text>
+              <Text style={[styles.repoDescription, { color: colors.textSecondary }]}>Save a local shortcut to the Pages project that deploys this repository. This does not change GitHub or Cloudflare build settings.</Text>
+              <TextInput value={projectDraft} onChangeText={setProjectDraft} placeholder="Cloudflare Pages project name" placeholderTextColor={colors.textTertiary} autoCapitalize="none" autoCorrect={false} style={[styles.projectInput, { color: colors.text, backgroundColor: colors.inputBg, borderColor: colors.border }]} accessibilityLabel="Cloudflare Pages project name" />
+              <Button title={linkedProject ? 'Update Pages link' : 'Save Pages link'} size="sm" onPress={() => void savePagesLink()} disabled={!projectDraft.trim()} />
+              {linkMessage ? <Text style={[styles.metaText, { color: colors.textSecondary }]}>{linkMessage}</Text> : null}
+              {linkedProject ? <>
+                <Text style={[styles.metaText, { color: colors.textSecondary }]}>Linked project: <Text style={{ color: colors.text, fontWeight: '600' }}>{linkedProject}</Text></Text>
+                <Button title="Open in Cloudflare Pages" variant="secondary" size="sm" onPress={() => router.push({ pathname: '/pages/[project]', params: { project: linkedProject } } as any)} icon={<Icon name="cloud" size={16} color={colors.text} />} />
+                <Button title="Remove link" variant="ghost" size="sm" onPress={() => void removePagesLink()} />
+              </> : null}
             </Card>
             <View style={styles.quickLinks}>
               <Button title={`Issues (${issues.length})`} size="sm" variant="secondary" onPress={() => setActiveTab('issues')} />
@@ -160,6 +195,7 @@ const styles = StyleSheet.create({
   tabText: { fontSize: 11, fontWeight: '500' },
   sectionTitle: { fontSize: FontSize.md, fontWeight: '600' },
   quickLinks: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.sm },
+  projectInput: { borderWidth: 1, borderRadius: Radius.md, paddingHorizontal: Spacing.md, paddingVertical: 11, fontSize: FontSize.md },
   infoLine: { flexDirection: 'row', justifyContent: 'space-between', gap: Spacing.lg },
   infoValue: { fontSize: FontSize.sm, fontWeight: '500', textAlign: 'right', flexShrink: 1 },
   itemRow: { borderWidth: 1, borderRadius: Radius.lg, padding: Spacing.md, flexDirection: 'row', alignItems: 'center', gap: Spacing.md },
