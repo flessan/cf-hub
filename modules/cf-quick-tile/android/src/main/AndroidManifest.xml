@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="id.imtaqin.cfmobile.quicktile">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
   <application>
     <service
       android:name="id.imtaqin.cfmobile.quicktile.CfQuickTileService"
