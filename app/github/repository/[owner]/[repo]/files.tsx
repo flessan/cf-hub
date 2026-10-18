@@ -9,6 +9,7 @@ import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useTheme } from '@/hooks/use-theme';
+import i18n from '@/i18n';
 import { FontSize, Radius, Spacing } from '@/constants/theme';
 import {
   getGitHubCredential, getRepository, getRepositoryTree, getRepositoryFile,
@@ -19,6 +20,9 @@ import {
 type FileNode = { name: string; path: string; kind: 'folder' | 'file'; sha?: string; size?: number; children: FileNode[] };
 type OpenFile = { path: string; name: string; content: string; originalContent: string; sha?: string; saving?: boolean };
 type VisibleNode = { node: FileNode; depth: number };
+
+const isIndonesian = () => i18n.language.toLowerCase().startsWith('id');
+const label = (en: string, id: string) => isIndonesian() ? id : en;
 
 const TEXT_EXTENSIONS = new Set([
   'ts','tsx','js','jsx','mjs','cjs','json','md','mdx','html','htm','css','scss','sass','less',
@@ -135,10 +139,10 @@ export default function GitHubFilesScreen() {
       setTree(result.tree.filter((item) => item.type === 'tree' || item.type === 'blob'));
       setLoadedBranch(nextBranch.trim());
       setBranch(nextBranch.trim());
-      if (result.truncated) setError('GitHub returned a truncated repository tree. Use file search to find items in the loaded paths.');
+      if (result.truncated) setError(label('GitHub returned a truncated repository tree. Use file search to find items in the loaded paths.', 'GitHub mengembalikan sebagian struktur repositori. Gunakan pencarian berkas untuk mencari di jalur yang sudah dimuat.'));
       setExpanded((previous) => previous.size ? previous : new Set(result.tree.filter((item) => item.type === 'tree' && !item.path.includes('/')).map((item) => item.path)));
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not load repository files. Check repository permissions.');
+      setError(e instanceof Error ? e.message : label('Could not load repository files. Check repository permissions.', 'Gagal memuat berkas repositori. Periksa izin aksesnya.'));
     } finally {
       setTreeLoading(false);
       setLoading(false);
@@ -159,7 +163,7 @@ export default function GitHubFilesScreen() {
         await loadTree(initialBranch, detail);
       } catch (e) {
         if (!cancelled) {
-          setError(e instanceof Error ? e.message : 'Could not load repository.');
+          setError(e instanceof Error ? e.message : label('Could not load repository.', 'Gagal memuat repositori.'));
           setLoading(false);
         }
       }
@@ -199,11 +203,11 @@ export default function GitHubFilesScreen() {
   const createDraft = () => {
     const path = newPath.trim().replace(/^\/+/, '');
     if (!path || path.split('/').some((part) => !part || part === '.' || part === '..')) {
-      setError('Enter a valid relative file path, e.g. src/example.ts.');
+      setError(label('Enter a valid relative file path, e.g. src/example.ts.', 'Masukkan jalur relatif yang valid, misalnya src/contoh.ts.'));
       return;
     }
     if (openFiles.some((file) => file.path === path) || tree.some((item) => item.path === path)) {
-      setError('A file with that path already exists.');
+      setError(label('A file with that path already exists.', 'Berkas dengan jalur tersebut sudah ada.'));
       return;
     }
     const name = path.split('/').pop() || path;
@@ -221,9 +225,9 @@ export default function GitHubFilesScreen() {
   const closeTab = (path: string) => {
     const file = openFiles.find((item) => item.path === path);
     if (file && file.content !== file.originalContent) {
-      Alert.alert('Unsaved changes', `Discard edits to ${file.name}?`, [
-        { text: 'Keep editing', style: 'cancel' },
-        { text: 'Discard', style: 'destructive', onPress: () => removeTab(path) },
+      Alert.alert(label('Unsaved changes', 'Perubahan belum disimpan'), label(`Discard edits to ${file.name}?`, `Buang perubahan pada ${file.name}?`), [
+        { text: label('Keep editing', 'Lanjut mengedit'), style: 'cancel' },
+        { text: label('Discard', 'Buang'), style: 'destructive', onPress: () => removeTab(path) },
       ]);
     } else removeTab(path);
   };
@@ -240,7 +244,7 @@ export default function GitHubFilesScreen() {
   const saveActiveFile = async () => {
     if (!activeFile || saving) return;
     if (!loadedBranch) {
-      setError('Select and load a branch before committing.');
+      setError(label('Select and load a branch before committing.', 'Pilih dan muat branch sebelum membuat commit.'));
       return;
     }
     setSaving(true);
@@ -258,9 +262,9 @@ export default function GitHubFilesScreen() {
         setTree((current) => [...current, { path: activeFile.path, mode: '100644', type: 'blob', sha: result.content?.sha ?? '', size: activeFile.content.length }]);
       }
       setError('');
-      Alert.alert('Committed to GitHub', `${activeFile.path}\n\nCommit: ${result.commit.sha.slice(0, 7)}`);
+      Alert.alert(label('Committed to GitHub', 'Berhasil commit ke GitHub'), `${activeFile.path}\n\nCommit: ${result.commit.sha.slice(0, 7)}`);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not commit this file. Check the app’s Contents: write permission and branch protection rules.');
+      setError(e instanceof Error ? e.message : label('Could not commit this file. Check the app’s Contents: write permission and branch protection rules.', 'Gagal membuat commit. Periksa izin Contents: write pada GitHub App dan aturan proteksi branch.'));
     } finally {
       setSaving(false);
     }
@@ -275,7 +279,7 @@ export default function GitHubFilesScreen() {
       const credential = await getGitHubCredential();
       setCodeResults(await searchRepositoryCode(owner, repo, query, credential?.accessToken ?? null));
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Code search failed. Check GitHub authorization and search query.');
+      setError(e instanceof Error ? e.message : label('Code search failed. Check GitHub authorization and search query.', 'Pencarian kode gagal. Periksa otorisasi GitHub dan kata pencarian.'));
     } finally {
       setSearchingCode(false);
     }
@@ -385,7 +389,7 @@ export default function GitHubFilesScreen() {
       <View style={[styles.topbar, { borderBottomColor: colors.borderLight }]}>
         <View style={{ flex: 1, minWidth: 90 }}>
           <Text numberOfLines={1} style={[styles.repositoryName, { color: colors.text }]}>{owner}/{repo}</Text>
-          <Text style={[styles.fileCount, { color: colors.textSecondary }]}>{loadedBranch || 'Loading branch…'}</Text>
+          <Text style={[styles.fileCount, { color: colors.textSecondary }]}>{loadedBranch || label('Loading branch…', 'Memuat branch…')}</Text>
         </View>
         <TouchableOpacity onPress={() => setSearchMode((mode) => mode === 'files' ? 'code' : 'files')} style={[styles.squareButton, { backgroundColor: searchMode === 'code' ? colors.primary + '25' : colors.surfaceSecondary }]} accessibilityLabel="Toggle code search">
           <Icon name="search" size={18} color={colors.primary} />
@@ -423,7 +427,7 @@ export default function GitHubFilesScreen() {
               <>
                 <View style={[styles.editorHeader, { borderBottomColor: colors.borderLight }]}>
                   <Text numberOfLines={1} style={[styles.filePath, { color: colors.textSecondary }]}>{activeFile.path}</Text>
-                  <Text style={[styles.dirtyState, { color: activeFile.content !== activeFile.originalContent ? colors.warning : colors.success }]}>{activeFile.content !== activeFile.originalContent ? 'Modified' : 'Saved'}</Text>
+                  <Text style={[styles.dirtyState, { color: activeFile.content !== activeFile.originalContent ? colors.warning : colors.success }]}>{activeFile.content !== activeFile.originalContent ? label('Modified', 'Diubah') : label('Saved', 'Tersimpan')}</Text>
                 </View>
                 <TextInput
                   value={activeFile.content}
@@ -442,7 +446,7 @@ export default function GitHubFilesScreen() {
                 <View style={[styles.commitPanel, { borderTopColor: colors.borderLight }]}>
                   <TextInput value={commitMessage} onChangeText={setCommitMessage} placeholder="Commit message" placeholderTextColor={colors.textTertiary} style={[styles.commitInput, { color: colors.text, backgroundColor: colors.inputBg, borderColor: colors.border }]} accessibilityLabel="Commit message" />
                   <Button
-                    title={saving ? 'Committing…' : activeFile.sha ? 'Commit file' : 'Create file'}
+                    title={saving ? label('Committing…', 'Membuat commit…') : activeFile.sha ? label('Commit file', 'Commit berkas') : label('Create file', 'Buat berkas')}
                     onPress={() => void saveActiveFile()}
                     disabled={saving || activeFile.content === activeFile.originalContent || !commitMessage.trim()}
                     size="sm"
