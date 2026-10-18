@@ -18,7 +18,7 @@ export type IconName =
   // Objects
   | 'cloud' | 'cloud-off' | 'cloud-upload' | 'key' | 'link' | 'code'
   | 'database' | 'server' | 'monitor' | 'mail' | 'user' | 'users'
-  | 'languages' | 'activity' | 'git-pull-request' | 'network' | 'lock-open' | 'lock-outline'
+  | 'languages' | 'activity' | 'git-pull-request' | 'git-branch' | 'network' | 'lock-open' | 'lock-outline' | 'folder' | 'folder-open' | 'file-text' | 'external-link'
   | 'enhanced-encryption' | 'fingerprint' | 'grid' | 'eye-off'
   // Theme
   | 'sun' | 'moon' | 'smartphone'
@@ -329,6 +329,29 @@ export function Icon({ name, size = 24, color, strokeWidth = 2 }: IconProps) {
       ]} />;
     case 'code':
       return <LucideIcon size={size} color={c} sw={sw} paths={['m16 18 6-6-6-6', 'm8 6-6 6 6 6']} />;
+    case 'folder':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9l-.82-1.2A2 2 0 0 0 9.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z',
+      ]} />;
+    case 'folder-open':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'm3 7 1.5-3h5.4a2 2 0 0 1 1.7.9l.8 1.2H20a2 2 0 0 1 2 2v1',
+        'M3 7h17a2 2 0 0 1 1.9 2.6l-2 7A2 2 0 0 1 18 18H5a2 2 0 0 1-1.9-1.4L1.5 9.6A2 2 0 0 1 3 7Z',
+      ]} />;
+    case 'file-text':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z',
+        'M14 2v6h6', 'M8 13h8', 'M8 17h8', 'M8 9h2',
+      ]} />;
+    case 'external-link':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M15 3h6v6', 'M10 14 21 3', 'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6',
+      ]} />;
+    case 'git-branch':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M6 3v12', 'M18 6a3 3 0 0 1-3 3H9a3 3 0 0 0-3 3',
+      ]} circles={[{ cx: 6, cy: 3, r: 2 }, { cx: 18, cy: 6, r: 2 }, { cx: 6, cy: 18, r: 2 }]} />;
+
     case 'database':
       return <LucideIcon size={size} color={c} sw={sw} paths={[
         'M3 5V19A9 3 0 0 0 21 19V5',
