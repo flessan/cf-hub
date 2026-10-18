@@ -37,7 +37,6 @@ function isTextFile(path: string) {
 
 function buildFileTree(entries: GitHubTreeEntry[]): FileNode[] {
   const roots: FileNode[] = [];
-  const dirs = new Map<string, FileNode>();
   for (const entry of entries) {
     const parts = entry.path.split('/').filter(Boolean);
     let parentPath = '';
@@ -55,7 +54,6 @@ function buildFileTree(entries: GitHubTreeEntry[]): FileNode[] {
         node.sha = entry.sha;
         node.size = entry.size;
       }
-      if (node.kind === 'folder') dirs.set(path, node);
       parentPath = path;
       siblings = node.children;
     });
