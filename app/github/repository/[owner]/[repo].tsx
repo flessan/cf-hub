@@ -83,6 +83,14 @@ export default function GitHubRepositoryScreen() {
     setLinkMessage('Cloudflare Pages shortcut removed.');
   };
   const openBrowser = (url: string) => router.push({ pathname: '/github/browser', params: { url } } as any);
+  const openCodeWorkspace = () => router.push({
+    pathname: '/github/repository/[owner]/[repo]/files',
+    params: { owner: ownerName, repo: repoName, branch: repository?.default_branch || '' },
+  } as any);
+  const openStackBlitz = () => router.push({
+    pathname: '/github/browser',
+    params: { url: `https://stackblitz.com/github/${ownerName}/${repoName}`, landscape: '1' },
+  } as any);
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
@@ -106,6 +114,10 @@ export default function GitHubRepositoryScreen() {
             </View>
             <Text style={[styles.branch, { color: colors.textSecondary }]}>Default branch: <Text style={{ color: colors.text, fontWeight: '600' }}>{repository.default_branch}</Text></Text>
             <Button title="Open on GitHub" variant="secondary" onPress={() => openBrowser(repository.html_url)} icon={<Icon name="github" size={18} color={colors.text} />} />
+            <View style={styles.quickLinks}>
+              <Button title="Browse files & edit" onPress={openCodeWorkspace} size="sm" icon={<Icon name="code" size={16} color="#fff" />} />
+              <Button title="Open in StackBlitz" variant="secondary" onPress={openStackBlitz} size="sm" icon={<Icon name="external-link" size={16} color={colors.text} />} />
+            </View>
           </Card>
         ) : null}
 
