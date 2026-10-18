@@ -69,7 +69,7 @@ describe('GitHub repository workspace APIs', () => {
 
     expect(tree.tree).toHaveLength(2);
     expect(String(fetchMock.mock.calls[0][0])).toContain('/git/trees/main?recursive=1');
-    expect(fetchMock.mock.calls[0][1].headers.Authorization).toBe('Bearer gho-test');
+    expect((fetchMock.mock.calls[0][1].headers as Record<string, string>).Authorization).toBe('Bearer gho-test');
   });
 
   it('decodes a text file and retains its Git blob SHA', async () => {
