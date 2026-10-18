@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Platform, ScrollView, StyleSheet, Text } from 'react-native';
-import { Stack } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { requestPinWidget } from 'react-native-android-widget';
 
@@ -12,13 +12,15 @@ import { SectionHeader } from '@/components/ui/section-header';
 import { Banner, Group, ListRow, SearchBar } from '@/components/ui/kit';
 import { FontSize, Spacing } from '@/constants/theme';
 import * as api from '@/services/cloudflare';
-import { getShortcutZone, setShortcutZone, ShortcutZone } from '@/services/shortcuts';
+import { ensureAuth, getShortcutZone, resolveZone, setShortcutZone, ShortcutZone, toggleUnderAttack } from '@/services/shortcuts';
 import { refreshShortcuts } from '@/widgets/sync';
 
 /** Pick the zone the home-screen widget and the Quick Settings tile work on. */
 export default function ShortcutsScreen() {
   const { t } = useTranslation();
   const { colors } = useTheme();
+  const params = useLocalSearchParams<{ toggle?: string }>();
+  const handledToggle = useRef<string | null>(null);
   const [current, setCurrent] = useState<ShortcutZone | null>(null);
   const [zones, setZones] = useState<ShortcutZone[] | null>(null);
   const [search, setSearch] = useState('');
@@ -39,6 +41,36 @@ export default function ShortcutsScreen() {
     getShortcutZone().then(setCurrent);
     load();
   }, [load]);
+
+  // Quick Settings tiles open this screen with an action parameter so the
+  // Cloudflare API call runs with the user's securely stored session.
+  useEffect(() => {
+    const action = typeof params.toggle === 'string' ? params.toggle : '';
+    if (action !== 'under_attack') {
+      handledToggle.current = null;
+      return;
+    }
+    if (handledToggle.current === action) return;
+    handledToggle.current = action;
+
+    let cancelled = false;
+    (async () => {
+      try {
+        if (!(await ensureAuth())) throw new Error(t('shortcuts.sign_in'));
+        const zone = await resolveZone();
+        if (!zone) throw new Error(t('shortcuts.no_zone'));
+        await toggleUnderAttack(zone);
+        await refreshShortcuts();
+        if (!cancelled) setError(null);
+      } catch (e: any) {
+        if (!cancelled) setError(e?.response?.data?.errors?.[0]?.message ?? e?.message ?? t('shortcuts.failed'));
+      } finally {
+        if (!cancelled) router.setParams({ toggle: undefined } as any);
+      }
+    })();
+
+    return () => { cancelled = true; };
+  }, [params.toggle, t]);
 
   // Search as the user types, a moment after they stop.
   useEffect(() => {
