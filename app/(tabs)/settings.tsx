@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { StyleSheet, View, Text, ScrollView, Alert, TouchableOpacity, DevSettings } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/auth';
 import { useThemeContext, ThemeMode } from '@/contexts/theme';
@@ -16,6 +16,8 @@ import { ChipRow, Group, IconCircle, ListRow, ToggleRow, ValueRow } from '@/comp
 import { Sheet } from '@/components/ui/sheet';
 import { Spacing, FontSize, Radius } from '@/constants/theme';
 import * as appLock from '@/services/app-lock';
+import * as premiumService from '@/services/premium';
+import { usePremium } from '@/services/premium';
 import { DiceBearAvatar } from '@/components/ui/dicebear-avatar';
 import { openReview } from '@/services/review-prompt';
 import { startPlayUpdate } from '@/services/play-update';
@@ -65,8 +67,10 @@ export default function SettingsScreen() {
   const currentLang = i18n.language;
   const [langOpen, setLangOpen] = useState(false);
   const [showSensitive, setShowSensitive] = useState(false);
-  const [lockAvailable, setLockAvailable] = useState(false);
-  const [lockEnabled, setLockEnabledState] = useState(false);
+  const [lockSummary, setLockSummary] = useState<appLock.LockMethod | 'biometric' | null>(null);
+  const premium = usePremium();
+  const [premiumPrice, setPremiumPrice] = useState<string | null>(null);
+  const [premiumBusy, setPremiumBusy] = useState(false);
   const { quota: aiQuota } = useAiQuota();
   const [showAiPaywall, setShowAiPaywall] = useState(false);
   const [analyticsOn, setAnalyticsOn] = useState(true);
@@ -80,21 +84,46 @@ export default function SettingsScreen() {
     await setAnalyticsEnabled(value);
   };
 
-  useEffect(() => {
-    (async () => {
-      setLockAvailable(await appLock.isLockAvailable());
-      setLockEnabledState(await appLock.isLockEnabled());
-    })();
-  }, []);
+  // Re-read on focus: the Security screen changes it.
+  useFocusEffect(useCallback(() => {
+    appLock.getLockSettings().then((s) => setLockSummary(s.method !== 'none' ? s.method : s.biometric ? 'biometric' : 'none')).catch(() => {});
+  }, []));
 
-  const toggleLock = async (value: boolean) => {
-    if (value) {
-      // Verify biometric works before enabling
-      const ok = await appLock.authenticate(t('lock.prompt'));
-      if (!ok) return;
+  useEffect(() => {
+    if (!premium) {
+      premiumService.getPremiumPrice().then(setPremiumPrice).catch(() => {});
     }
-    setLockEnabledState(value);
-    await appLock.setLockEnabled(value);
+  }, [premium]);
+
+  const handleBuyPremium = async () => {
+    setPremiumBusy(true);
+    try {
+      await premiumService.purchasePremium();
+    } catch (e: any) {
+      const msg = String(e?.message ?? '');
+      if (msg === 'billing-unavailable') {
+        Alert.alert(t('premium.unavailable_title'), t('premium.unavailable_body'));
+      } else if (!msg.toLowerCase().includes('cancel')) {
+        Alert.alert(t('common.error'), msg || t('premium.purchase_error'));
+      }
+    } finally {
+      setPremiumBusy(false);
+    }
+  };
+
+  const handleRestorePremium = async () => {
+    setPremiumBusy(true);
+    try {
+      const owned = await premiumService.restorePremium();
+      Alert.alert(
+        t('common.info'),
+        owned ? t('premium.restored') : t('premium.nothing_to_restore')
+      );
+    } catch (e: any) {
+      Alert.alert(t('common.error'), e?.message ?? t('premium.purchase_error'));
+    } finally {
+      setPremiumBusy(false);
+    }
   };
 
   const dots = '••••';
@@ -156,6 +185,37 @@ export default function SettingsScreen() {
           variant="default"
         />
       </Card>
+
+      {/* Premium */}
+      {premium ? (
+        <Group style={styles.planCard}>
+          <ListRow icon="check-circle" iconTone="success" title={t('premium.active_title')} />
+        </Group>
+      ) : (
+        <Card style={[styles.planCard, styles.plan]}>
+          <View style={styles.planTop}>
+            <IconCircle name="zap" />
+            <Text style={[styles.planTitle, { color: colors.text }]}>{t('premium.upsell_compact')}</Text>
+          </View>
+          <View style={styles.planActions}>
+            <TouchableOpacity
+              onPress={handleRestorePremium}
+              disabled={premiumBusy}
+              hitSlop={8}
+              style={styles.planLinkWrap}
+              accessibilityRole="button"
+            >
+              <Text style={[styles.planLink, { color: colors.textSecondary }]}>{t('premium.restore')}</Text>
+            </TouchableOpacity>
+            <Button
+              title={premiumPrice ?? t('premium.buy')}
+              onPress={handleBuyPremium}
+              disabled={premiumBusy}
+              size="sm"
+            />
+          </View>
+        </Card>
+      )}
 
       {/* CF Mobile AI plan */}
       {aiPro ? (
@@ -239,13 +299,17 @@ export default function SettingsScreen() {
       {/* Security */}
       <SectionHeader title={t('settings.security')} />
       <Group>
-        <ToggleRow
+        <ListRow
+          icon="widgets"
+          title={t('shortcuts.title')}
+          subtitle={t('shortcuts.settings_sub')}
+          onPress={() => router.push('/shortcuts' as any)}
+        />
+        <ListRow
           icon="enhanced-encryption"
-          title={t('settings.biometric_lock')}
-          subtitle={lockAvailable ? t('settings.biometric_lock_sub') : t('settings.biometric_unavailable')}
-          value={lockEnabled}
-          onValueChange={toggleLock}
-          disabled={!lockAvailable}
+          title={t('security.title')}
+          subtitle={lockSummary ? t(`security.summary_${lockSummary}`) : undefined}
+          onPress={() => router.push('/security' as any)}
         />
         <ListRow
           icon="clock"
@@ -336,6 +400,24 @@ export default function SettingsScreen() {
           title={t('settings.access_apps')}
           subtitle={t('settings.access_apps_sub')}
           onPress={() => router.push('/access-apps' as any)}
+        />
+        <ListRow
+          icon="users"
+          title={t('settings.access_idps')}
+          subtitle={t('settings.access_idps_sub')}
+          onPress={() => router.push('/access-idps' as any)}
+        />
+        <ListRow
+          icon="key"
+          title={t('settings.access_tokens')}
+          subtitle={t('settings.access_tokens_sub')}
+          onPress={() => router.push('/access-service-tokens' as any)}
+        />
+        <ListRow
+          icon="fingerprint"
+          title={t('settings.access_mtls')}
+          subtitle={t('settings.access_mtls_sub')}
+          onPress={() => router.push('/access-mtls' as any)}
         />
         <ListRow
           icon="server"

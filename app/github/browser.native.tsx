@@ -3,6 +3,7 @@ import { Linking, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOp
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
+import * as ScreenOrientation from 'expo-screen-orientation';
 import { Icon } from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/hooks/use-theme';
@@ -27,7 +28,8 @@ function resolveAddress(value: string): string | null {
 }
 
 export default function GitHubBrowserScreen() {
-  const params = useLocalSearchParams<{ url?: string }>();
+  const params = useLocalSearchParams<{ url?: string; landscape?: string }>();
+  const forceLandscape = String(params.landscape || '') === '1';
   const initial = resolveAddress(String(params.url || 'https://github.com')) || 'https://github.com';
   const { colors } = useTheme();
   const webview = useRef<any>(null);
@@ -42,6 +44,29 @@ export default function GitHubBrowserScreen() {
     setAddress(initial);
     setUrl(initial);
   }, [initial]);
+
+  useEffect(() => {
+    let disposed = false;
+    let previousLock: ScreenOrientation.OrientationLock | null = null;
+    const applyLandscape = async () => {
+      if (!forceLandscape) return;
+      try {
+        previousLock = await ScreenOrientation.getOrientationLockAsync();
+        if (!disposed) await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+      } catch {
+        // Some devices/ROMs may restrict rotation; browser navigation still works.
+      }
+    };
+    void applyLandscape();
+    return () => {
+      disposed = true;
+      if (forceLandscape && previousLock !== null) {
+        void ScreenOrientation.lockAsync(previousLock).catch(() => {});
+      }
+    };
+  }, [forceLandscape]);
+
+
 
   const navigate = () => {
     const next = resolveAddress(address);

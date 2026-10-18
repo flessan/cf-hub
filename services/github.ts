@@ -78,6 +78,41 @@ export interface GitHubCommit {
   author?: { login: string; avatar_url: string } | null;
 }
 
+export interface GitHubTreeEntry {
+  path: string;
+  mode: string;
+  type: 'blob' | 'tree' | 'commit';
+  sha: string;
+  size?: number;
+  url?: string;
+}
+
+export interface GitHubRepositoryTree {
+  sha: string;
+  tree: GitHubTreeEntry[];
+  truncated: boolean;
+}
+
+export interface GitHubRepositoryFile {
+  name: string;
+  path: string;
+  sha: string;
+  size: number;
+  type: 'file';
+  content: string;
+  encoding: string;
+  html_url?: string;
+}
+
+export interface GitHubCodeSearchItem {
+  name: string;
+  path: string;
+  html_url: string;
+  sha: string;
+  repository: Pick<GitHubRepository, 'id' | 'full_name' | 'html_url' | 'private' | 'default_branch' | 'owner' | 'name'>;
+  text_matches?: Array<{ fragment: string; matches: Array<{ text: string; indices: number[] }> }>;
+}
+
 export interface DeviceAuthorization {
   device_code: string;
   user_code: string;
@@ -162,6 +197,7 @@ function errorMessage(payload: unknown, fallback: string): string {
 export async function githubRequest<T>(
   path: string,
   tokenOverride?: string | null,
+  init: RequestInit = {},
 ): Promise<T> {
   const token = tokenOverride === undefined ? await getGitHubToken() : tokenOverride;
   const headers: Record<string, string> = {
@@ -170,7 +206,10 @@ export async function githubRequest<T>(
   };
   if (token) headers.Authorization = `Bearer ${token}`;
 
-  const response = await fetch(path.startsWith('http') ? path : `${GITHUB_API}${path}`, { headers });
+  const response = await fetch(path.startsWith('http') ? path : `${GITHUB_API}${path}`, {
+    ...init,
+    headers: { ...headers, ...((init.headers ?? {}) as Record<string, string>) },
+  });
   let payload: unknown;
   try {
     payload = await response.json();
@@ -306,4 +345,90 @@ export async function pollGitHubDeviceAuthorization(
     default:
       return { status: 'error', message: errorMessage(payload, `GitHub authorization failed (${response.status}).`) };
   }
+}
+
+
+/** Fetch every path in a repository tree for a Gitako-style file explorer. */
+export function getRepositoryTree(
+  owner: string,
+  repo: string,
+  branch: string,
+  token?: string | null,
+): Promise<GitHubRepositoryTree> {
+  return githubRequest<GitHubRepositoryTree>(
+    `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/trees/${encodeURIComponent(branch)}?recursive=1`,
+    token,
+  );
+}
+
+function decodeBase64Utf8(value: string): string {
+  const binary = atob(value.replace(/\\s/g, ''));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+function encodeBase64Utf8(value: string): string {
+  const bytes = new TextEncoder().encode(value);
+  let binary = '';
+  const chunkSize = 0x8000;
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
+  }
+  return btoa(binary);
+}
+
+export async function getRepositoryFile(
+  owner: string,
+  repo: string,
+  path: string,
+  branch: string,
+  token?: string | null,
+): Promise<GitHubRepositoryFile> {
+  const file = await githubRequest<GitHubRepositoryFile>(
+    `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(branch)}`,
+    token,
+  );
+  if (file.type !== 'file' || file.encoding !== 'base64' || !file.content) {
+    throw new Error('This item is not a text file that CF-Hub can edit.');
+  }
+  return { ...file, content: decodeBase64Utf8(file.content) };
+}
+
+export async function saveRepositoryFile(
+  owner: string,
+  repo: string,
+  path: string,
+  branch: string,
+  content: string,
+  message: string,
+  sha?: string,
+  token?: string | null,
+): Promise<{ content?: { sha: string; path: string; html_url?: string }; commit: { sha: string; html_url?: string; message?: string } }> {
+  const body: Record<string, string> = {
+    message: message.trim() || `Update ${path}`,
+    content: encodeBase64Utf8(content),
+    branch,
+  };
+  if (sha) body.sha = sha;
+  return githubRequest(
+    `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${path.split('/').map(encodeURIComponent).join('/')}`,
+    token,
+    { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) },
+  );
+}
+
+/** GitHub code search, scoped to the open repository. */
+export async function searchRepositoryCode(
+  owner: string,
+  repo: string,
+  query: string,
+  token?: string | null,
+): Promise<GitHubCodeSearchItem[]> {
+  const q = `${query.trim()} repo:${owner}/${repo}`;
+  const result = await githubRequest<{ items: GitHubCodeSearchItem[] }>(
+    `/search/code?q=${encodeURIComponent(q)}&per_page=30`,
+    token,
+  );
+  return result.items ?? [];
 }

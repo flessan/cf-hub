@@ -18,8 +18,8 @@ export type IconName =
   // Objects
   | 'cloud' | 'cloud-off' | 'cloud-upload' | 'key' | 'link' | 'code'
   | 'database' | 'server' | 'monitor' | 'mail' | 'user' | 'users'
-  | 'languages' | 'activity' | 'git-pull-request' | 'network' | 'lock-open' | 'lock-outline'
-  | 'enhanced-encryption'
+  | 'languages' | 'activity' | 'git-pull-request' | 'git-branch' | 'network' | 'lock-open' | 'lock-outline' | 'folder' | 'folder-open' | 'file-text' | 'external-link'
+  | 'enhanced-encryption' | 'fingerprint' | 'grid' | 'eye-off'
   // Theme
   | 'sun' | 'moon' | 'smartphone'
   // UI
@@ -80,17 +80,18 @@ export function Icon({ name, size = 24, color, strokeWidth = 2 }: IconProps) {
   const sw = strokeWidth;
 
   switch (name) {
+    // ─── Brand (filled) ───────────────────────────────────
     case 'github':
       return <FilledIcon size={size} color={c} paths={[
         'M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.75-.24.75-.53v-2.04c-3.1.68-3.75-1.32-3.75-1.32-.5-1.27-1.23-1.61-1.23-1.61-1.01-.69.08-.68.08-.68 1.12.08 1.7 1.14 1.7 1.14.99 1.7 2.6 1.21 3.23.92.1-.72.39-1.21.71-1.49-2.48-.28-5.08-1.24-5.08-5.52 0-1.22.44-2.21 1.15-2.99-.12-.28-.5-1.42.11-2.96 0 0 .94-.3 3.06 1.14a10.6 10.6 0 0 1 5.56 0c2.12-1.44 3.06-1.14 3.06-1.14.61 1.54.23 2.68.11 2.96.72.78 1.15 1.77 1.15 2.99 0 4.29-2.61 5.24-5.1 5.51.4.34.76 1.02.76 2.07V22c0 .29.2.63.76.53A11.1 11.1 0 0 0 12 .9Z',
       ]} />;
-
     case 'git-pull-request':
       return <LucideIcon size={size} color={c} sw={sw} paths={[
         'M6 3v12', 'M18 15V9a3 3 0 0 0-3-3h-3', 'M12 6l-3-3',
       ]} circles={[{ cx: 6, cy: 3, r: 2 }, { cx: 6, cy: 18, r: 2 }, { cx: 18, cy: 18, r: 2 }]} />;
 
     // ─── Brand (filled) ───────────────────────────────────
+
     case 'cloudflare':
       return <FilledIcon size={size} color={c} paths={[
         'M16.5088 16.8447c.1475-.5068.0908-.9707-.1553-1.3154-.2246-.3164-.6045-.499-1.0615-.5205l-8.6592-.1123a.1559.1559 0 0 1-.1333-.0713c-.0283-.042-.0351-.0986-.021-.1553.0278-.084.1123-.1484.2036-.1562l8.7359-.1123c1.0351-.0489 2.1601-.8868 2.5537-1.9136l.499-1.3013c.0215-.0561.0293-.1128.0147-.168-.5625-2.5463-2.835-4.4453-5.5499-4.4453-2.5039 0-4.6284 1.6177-5.3876 3.8614-.4927-.3658-1.1187-.5625-1.794-.499-1.2026.119-2.1665 1.083-2.2861 2.2856-.0283.31-.0069.6128.0635.894C1.5683 13.171 0 14.7754 0 16.752c0 .1748.0142.3515.0352.5273.0141.083.0844.1475.1689.1475h15.9814c.0909 0 .1758-.0645.2032-.1553l.12-.4268z',
@@ -141,6 +142,29 @@ export function Icon({ name, size = 24, color, strokeWidth = 2 }: IconProps) {
       return <LucideIcon size={size} color={c} sw={sw} paths={[
         'M7 11V7a5 5 0 0 1 10 0v4',
       ]} rects={[{ x: 3, y: 11, w: 18, h: 11, rx: 2 }]} />;
+    case 'fingerprint':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4',
+        'M14 13.12c0 2.38 0 6.38-1 8.88',
+        'M17.29 21.02c.12-.6.43-2.3.5-3.02',
+        'M2 12a10 10 0 0 1 18-6',
+        'M2 16h.01',
+        'M21.8 16c.2-2 .131-5.354 0-6',
+        'M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2',
+        'M8.65 22c.21-.66.45-1.32.57-2',
+        'M9 6.8a6 6 0 0 1 9 5.2v2',
+      ]} />;
+    case 'grid':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M3 9h18', 'M3 15h18', 'M9 3v18', 'M15 3v18',
+      ]} rects={[{ x: 3, y: 3, w: 18, h: 18, rx: 2 }]} />;
+    case 'eye-off':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49',
+        'M14.084 14.158a3 3 0 0 1-4.242-4.242',
+        'M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143',
+        'm2 2 20 20',
+      ]} />;
     case 'lock-open':
       return <LucideIcon size={size} color={c} sw={sw} paths={[
         'M8 11V7a4 4 0 0 1 8 0',
@@ -305,6 +329,29 @@ export function Icon({ name, size = 24, color, strokeWidth = 2 }: IconProps) {
       ]} />;
     case 'code':
       return <LucideIcon size={size} color={c} sw={sw} paths={['m16 18 6-6-6-6', 'm8 6-6 6 6 6']} />;
+    case 'folder':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9l-.82-1.2A2 2 0 0 0 9.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z',
+      ]} />;
+    case 'folder-open':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'm3 7 1.5-3h5.4a2 2 0 0 1 1.7.9l.8 1.2H20a2 2 0 0 1 2 2v1',
+        'M3 7h17a2 2 0 0 1 1.9 2.6l-2 7A2 2 0 0 1 18 18H5a2 2 0 0 1-1.9-1.4L1.5 9.6A2 2 0 0 1 3 7Z',
+      ]} />;
+    case 'file-text':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z',
+        'M14 2v6h6', 'M8 13h8', 'M8 17h8', 'M8 9h2',
+      ]} />;
+    case 'external-link':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M15 3h6v6', 'M10 14 21 3', 'M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6',
+      ]} />;
+    case 'git-branch':
+      return <LucideIcon size={size} color={c} sw={sw} paths={[
+        'M6 3v12', 'M18 6a3 3 0 0 1-3 3H9a3 3 0 0 0-3 3',
+      ]} circles={[{ cx: 6, cy: 3, r: 2 }, { cx: 18, cy: 6, r: 2 }, { cx: 6, cy: 18, r: 2 }]} />;
+
     case 'database':
       return <LucideIcon size={size} color={c} sw={sw} paths={[
         'M3 5V19A9 3 0 0 0 21 19V5',
