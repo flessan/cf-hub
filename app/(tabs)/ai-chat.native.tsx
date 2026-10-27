@@ -59,7 +59,7 @@ export default function AiChatNativeScreen() {
           }}
           onError={() => { setLoading(false); setLoadFailed(true); }}
           onShouldStartLoadWithRequest={(request) => {
-            if (/^https?:\\/\\//i.test(request.url)) return true;
+            if (/^https?:\/\//i.test(request.url)) return true;
             if (/^(mailto|tel):/i.test(request.url)) {
               Linking.openURL(request.url).catch(() => {});
             }
