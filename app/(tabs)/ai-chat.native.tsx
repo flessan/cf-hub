@@ -75,7 +75,7 @@ export default function AiChatNativeScreen() {
         ) : null}
         {loadFailed ? (
           <View style={[styles.errorOverlay, { backgroundColor: colors.background }]}>
-            <Icon name="wifi-off" size={32} color={colors.textTertiary} />
+            <Icon name="error-circle" size={32} color={colors.textTertiary} />
             <Text style={[styles.errorTitle, { color: colors.text }]}>ChatGPT could not be loaded</Text>
             <Text style={[styles.errorBody, { color: colors.textSecondary }]}>Check your connection, retry, or open ChatGPT in your regular browser if sign-in is blocked in the embedded view.</Text>
             <TouchableOpacity onPress={() => { setLoadFailed(false); setLoading(true); webview.current?.reload(); }} style={[styles.actionButton, { backgroundColor: colors.primary }]}>
