@@ -9,8 +9,8 @@
     "slide2_desc": "Tổng quan về yêu cầu, tốc độ truy cập bộ đệm, băng thông và các mối đe dọa.",
     "slide3_title": "Bảo mật trong một lần nhấn",
     "slide3_desc": "Under Attack Mode, SSL/TLS, quy tắc tường lửa và bộ đệm, tất cả ở cùng một nơi.",
-    "slide4_title": "Chỉ cần hỏi trợ lý AI",
-    "slide4_desc": "Diễn tả sự thay đổi bằng lời nói đơn giản. Không có gì chạy cho đến khi bạn chấp nhận nó."
+    "slide4_title": "Trợ giúp với ChatGPT",
+    "slide4_desc": "Mở ChatGPT ngay trong ứng dụng để được hỗ trợ về cấu hình Cloudflare."
   },
   "common": {
     "loading": "Đang tải...",

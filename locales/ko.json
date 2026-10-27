@@ -9,8 +9,8 @@
     "slide2_desc": "요청, 캐시 적중률, 대역폭 및 위협을 한눈에 볼 수 있습니다.",
     "slide3_title": "탭 한 번으로 보안",
     "slide3_desc": "Under Attack Mode, SSL/TLS, 방화벽 규칙 및 캐시를 모두 한곳에서 처리할 수 있습니다.",
-    "slide4_title": "AI 비서에게 물어보세요",
-    "slide4_desc": "변화를 쉬운 말로 설명하세요. 승인할 때까지는 아무것도 실행되지 않습니다."
+    "slide4_title": "ChatGPT로 도움받기",
+    "slide4_desc": "앱에서 ChatGPT를 열어 Cloudflare 설정에 관한 도움을 받을 수 있습니다."
   },
   "common": {
     "loading": "로딩 중...",

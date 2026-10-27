@@ -9,8 +9,8 @@
     "slide2_desc": "Request, cache hit rate, bandwidth, dan ancaman dalam sekali lihat.",
     "slide3_title": "Keamanan sekali ketuk",
     "slide3_desc": "Under Attack Mode, SSL/TLS, aturan firewall, dan cache dalam satu tempat.",
-    "slide4_title": "Tinggal minta ke asisten AI",
-    "slide4_desc": "Tulis perubahan yang kamu mau dengan bahasa sehari-hari. Tidak ada yang dijalankan tanpa persetujuanmu."
+    "slide4_title": "Bantuan AI lewat ChatGPT",
+    "slide4_desc": "Buka ChatGPT langsung dari aplikasi untuk mencari bantuan soal pengaturan Cloudflare."
   },
   "common": {
     "loading": "Memuat...",

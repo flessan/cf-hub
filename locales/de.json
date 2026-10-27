@@ -9,8 +9,8 @@
     "slide2_desc": "Anfragen, Cache-Trefferquote, Bandbreite und Bedrohungen auf einen Blick.",
     "slide3_title": "Sicherheit mit einem Fingertipp",
     "slide3_desc": "Under Attack Mode, SSL/TLS, Firewall-Regeln und Cache, alles an einem Ort.",
-    "slide4_title": "Fragen Sie einfach den KI-Assistenten",
-    "slide4_desc": "Beschreiben Sie die Veränderung in einfachen Worten. Es läuft nichts, bis Sie es genehmigen."
+    "slide4_title": "KI-Hilfe mit ChatGPT",
+    "slide4_desc": "Öffne ChatGPT direkt in der App, um Hilfe zu deiner Cloudflare-Konfiguration zu erhalten."
   },
   "common": {
     "loading": "Lädt...",

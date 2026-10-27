@@ -9,8 +9,8 @@
     "slide2_desc": "Requêtes, taux de réussite du cache, bande passante et menaces en un coup d'œil.",
     "slide3_title": "La sécurité en un seul clic",
     "slide3_desc": "Under Attack Mode, SSL/TLS, règles de pare-feu et cache, le tout au même endroit.",
-    "slide4_title": "Demandez simplement à l'assistant IA",
-    "slide4_desc": "Décrivez le changement avec des mots simples. Rien ne fonctionne jusqu'à ce que vous l'approuviez."
+    "slide4_title": "L’aide de ChatGPT",
+    "slide4_desc": "Ouvrez ChatGPT depuis l’application pour obtenir de l’aide sur votre configuration Cloudflare."
   },
   "common": {
     "loading": "Chargement...",

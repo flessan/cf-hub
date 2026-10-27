@@ -135,13 +135,13 @@ function IssueRow({ issue, isPull, onPress }: { issue: GitHubIssue; isPull?: boo
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  content: { padding: Spacing.lg, paddingBottom: Spacing.xxxl, gap: Spacing.md },
-  intro: { marginBottom: Spacing.xs, gap: 4 },
+  content: { padding: Spacing.xl, paddingBottom: Spacing.xxxl, gap: Spacing.lg },
+  intro: { marginBottom: Spacing.sm, gap: 6 },
   title: { fontSize: FontSize.xxl, fontWeight: '600', letterSpacing: -0.4 },
   subtitle: { fontSize: FontSize.sm, lineHeight: 19 },
-  row: { padding: Spacing.md, borderWidth: 1, borderRadius: Radius.lg, flexDirection: 'row', alignItems: 'center', gap: Spacing.md },
-  avatar: { width: 38, height: 38, borderRadius: 19 },
-  itemIcon: { width: 40, height: 40, borderRadius: Radius.md, alignItems: 'center', justifyContent: 'center' },
+  row: { padding: Spacing.lg, minHeight: 88, borderWidth: 1, borderRadius: Radius.xl, flexDirection: 'row', alignItems: 'center', gap: Spacing.lg },
+  avatar: { width: 42, height: 42, borderRadius: 21 },
+  itemIcon: { width: 44, height: 44, borderRadius: Radius.lg, alignItems: 'center', justifyContent: 'center' },
   rowTitle: { fontSize: FontSize.sm, fontWeight: '600', lineHeight: 19 },
   rowBody: { fontSize: FontSize.xs, lineHeight: 17 },
   metadata: { flexDirection: 'row', gap: Spacing.sm, flexWrap: 'wrap', alignItems: 'center' },

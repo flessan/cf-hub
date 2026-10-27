@@ -9,8 +9,8 @@
     "slide2_desc": "Bir bakışta istekler, önbellek isabet oranı, bant genişliği ve tehditler.",
     "slide3_title": "Tek dokunuşla güvenlik",
     "slide3_desc": "Under Attack Mode, SSL/TLS, güvenlik duvarı kuralları ve önbellek, hepsi tek bir yerde.",
-    "slide4_title": "Yapay zeka asistanına sormanız yeterli",
-    "slide4_desc": "Değişikliği basit kelimelerle açıklayın. Siz onaylayana kadar hiçbir şey çalışmaz."
+    "slide4_title": "ChatGPT ile yardım",
+    "slide4_desc": "Cloudflare yapılandırmanız hakkında yardım almak için ChatGPT’yi uygulama içinden açın."
   },
   "common": {
     "loading": "Yükleniyor...",

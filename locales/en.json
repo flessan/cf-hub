@@ -9,8 +9,8 @@
     "slide2_desc": "Requests, cache hit rate, bandwidth and threats at a glance.",
     "slide3_title": "Security in one tap",
     "slide3_desc": "Under Attack Mode, SSL/TLS, firewall rules and cache, all in one place.",
-    "slide4_title": "Just ask the AI assistant",
-    "slide4_desc": "Describe the change in plain words. Nothing runs until you approve it."
+    "slide4_title": "ChatGPT, built into your workflow",
+    "slide4_desc": "Open ChatGPT from the app to get help with your Cloudflare setup."
   },
   "common": {
     "loading": "Loading...",

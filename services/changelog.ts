@@ -7,6 +7,17 @@ export interface ChangelogEntry {
 
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: '1.9.0',
+    date: '2026-10-27',
+    highlights: [
+      'AI Chat now opens ChatGPT in an in-app browser, with an option to continue in the external browser',
+      'GitHub workspace refreshed with browser-style repository navigation and more spacious layouts',
+    ],
+    fixes: [
+      'Improved spacing and readability across GitHub repositories, issues, pull requests, and the code workspace',
+    ],
+  },
+  {
     version: '1.8.0',
     date: '2026-10-15',
     highlights: [

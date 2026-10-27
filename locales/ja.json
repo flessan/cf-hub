@@ -9,8 +9,8 @@
     "slide2_desc": "リクエスト、キャッシュ ヒット率、帯域幅、脅威が一目でわかります。",
     "slide3_title": "ワンタップでセキュリティを確保",
     "slide3_desc": "Under Attack Mode、SSL/TLS、ファイアウォール ルールとキャッシュをすべて 1 か所にまとめました。",
-    "slide4_title": "AIアシスタントに聞いてみてください",
-    "slide4_desc": "変化をわかりやすい言葉で説明してください。承認するまで何も実行されません。"
+    "slide4_title": "ChatGPTでサポート",
+    "slide4_desc": "アプリ内からChatGPTを開いて、Cloudflareの設定について相談できます。"
   },
   "common": {
     "loading": "読み込み中...",
