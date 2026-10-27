@@ -9,8 +9,8 @@
     "slide2_desc": "请求、缓存命中率、带宽和威胁一目了然。",
     "slide3_title": "一键安全",
     "slide3_desc": "Under Attack Mode、SSL/TLS、防火墙规则和缓存，全部集中在一处。",
-    "slide4_title": "问问AI助手就可以了",
-    "slide4_desc": "用通俗易懂的语言描述一下变化。在您批准之前什么都不会运行。"
+    "slide4_title": "使用 ChatGPT 获取帮助",
+    "slide4_desc": "直接在应用中打开 ChatGPT，获取 Cloudflare 配置方面的帮助。"
   },
   "common": {
     "loading": "加载中...",
