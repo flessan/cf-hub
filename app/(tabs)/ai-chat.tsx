@@ -26,7 +26,7 @@ export default function AiChatFallbackScreen() {
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
       <Stack.Screen options={{ title: 'ChatGPT' }} />
       <View style={[styles.logo, { backgroundColor: colors.text }]}>
-        <Icon name="message-circle" size={34} color={colors.surface} />
+        <Icon name="sparkles" size={34} color={colors.surface} />
       </View>
       <Text style={[styles.title, { color: colors.text }]}>ChatGPT</Text>
       <Text style={[styles.body, { color: colors.textSecondary }]}>
