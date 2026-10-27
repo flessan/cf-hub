@@ -121,14 +121,14 @@ export default function GitHubRepositoryScreen() {
           </Card>
         ) : null}
 
-        <View style={[styles.tabs, { backgroundColor: colors.surfaceSecondary }]}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[styles.tabs, { borderBottomColor: colors.borderLight }]} contentContainerStyle={styles.tabList}>
           {tabs.map((tab) => (
-            <TouchableOpacity key={tab.key} onPress={() => setActiveTab(tab.key)} style={[styles.tab, activeTab === tab.key && { backgroundColor: colors.surface, borderColor: colors.border }]} activeOpacity={0.8}>
+            <TouchableOpacity key={tab.key} onPress={() => setActiveTab(tab.key)} style={[styles.tab, activeTab === tab.key && { backgroundColor: colors.background, borderBottomColor: colors.primary }]} activeOpacity={0.8}>
               <Icon name={tab.icon as any} size={16} color={activeTab === tab.key ? colors.primary : colors.textSecondary} />
               <Text numberOfLines={1} style={[styles.tabText, { color: activeTab === tab.key ? colors.text : colors.textSecondary }]}>{tab.label}</Text>
             </TouchableOpacity>
           ))}
-        </View>
+        </ScrollView>
 
         {error ? <Card><Text style={{ color: colors.error, fontSize: FontSize.sm }}>{error}</Text></Card> : null}
         {loading && !repository ? <Text style={{ color: colors.textSecondary, padding: Spacing.lg }}>Loading repository…</Text> : null}
@@ -193,23 +193,24 @@ function ItemRow({ title, subtitle, onPress, icon, badge }: { title: string; sub
 
 const styles = StyleSheet.create({
   screen: { flex: 1 },
-  content: { padding: Spacing.lg, paddingBottom: Spacing.xxxl, gap: Spacing.md },
-  repoHeader: { gap: Spacing.md },
-  ownerRow: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.md },
-  avatar: { width: 44, height: 44, borderRadius: 14 },
-  repoTitle: { fontSize: FontSize.lg, fontWeight: '600' },
+  content: { padding: Spacing.xl, paddingBottom: Spacing.xxxl, gap: Spacing.lg },
+  repoHeader: { gap: Spacing.lg, padding: Spacing.lg, borderRadius: Radius.xl },
+  ownerRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.lg },
+  avatar: { width: 48, height: 48, borderRadius: 16 },
+  repoTitle: { fontSize: FontSize.xl, fontWeight: '600' },
   repoDescription: { fontSize: FontSize.sm, lineHeight: 19, marginTop: 4 },
   metadata: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: Spacing.md },
   metaText: { fontSize: FontSize.xs },
   branch: { fontSize: FontSize.sm },
-  tabs: { borderRadius: Radius.lg, padding: 4, flexDirection: 'row', flexWrap: 'wrap', gap: 3 },
-  tab: { flexGrow: 1, minWidth: '22%', borderRadius: Radius.md, borderWidth: 1, borderColor: 'transparent', minHeight: 40, paddingHorizontal: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 5 },
-  tabText: { fontSize: 11, fontWeight: '500' },
+  tabs: { borderBottomWidth: StyleSheet.hairlineWidth },
+  tabList: { flexDirection: 'row', alignItems: 'stretch', gap: Spacing.md },
+  tab: { flexGrow: 0, flexShrink: 0, minWidth: 108, borderWidth: 0, borderBottomWidth: 2, borderBottomColor: 'transparent', borderRadius: 0, minHeight: 48, paddingHorizontal: Spacing.sm, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: Spacing.sm },
+  tabText: { fontSize: FontSize.sm, fontWeight: '500' },
   sectionTitle: { fontSize: FontSize.md, fontWeight: '600' },
-  quickLinks: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.sm },
+  quickLinks: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.md },
   projectInput: { borderWidth: 1, borderRadius: Radius.md, paddingHorizontal: Spacing.md, paddingVertical: 11, fontSize: FontSize.md },
   infoLine: { flexDirection: 'row', justifyContent: 'space-between', gap: Spacing.lg },
   infoValue: { fontSize: FontSize.sm, fontWeight: '500', textAlign: 'right', flexShrink: 1 },
-  itemRow: { borderWidth: 1, borderRadius: Radius.lg, padding: Spacing.md, flexDirection: 'row', alignItems: 'center', gap: Spacing.md },
+  itemRow: { borderWidth: 1, borderRadius: Radius.xl, padding: Spacing.lg, minHeight: 76, flexDirection: 'row', alignItems: 'center', gap: Spacing.lg },
   itemTitle: { fontSize: FontSize.sm, fontWeight: '600', lineHeight: 18 },
 });
